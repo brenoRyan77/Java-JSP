@@ -2,6 +2,11 @@ package com.crudjsp.factory;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import com.crudjsp.exception.DbException;
+import com.mysql.jdbc.PreparedStatement;
 
 public class ConnectionFactory {
 
@@ -37,6 +42,39 @@ public class ConnectionFactory {
 		if(conx != null) {
 			System.out.println("Conex�o obtida com sucesso!");
 			conx.close();
+		}
+	}
+	
+	public static void fecharConexao(Connection conx) {
+
+		if(conx != null) {
+			try {
+				conx.close();
+			}catch(SQLException e) {
+				throw new DbException(e.getMessage());
+			}
+		}
+	}
+	
+	public static void fecherResultSet(ResultSet rs) {
+
+		if(rs != null) {
+			try{
+				rs.close();
+			}catch(SQLException e) {
+				throw new DbException(e.getMessage());
+			}
+		}
+	}
+	
+	public static void fecharStatement(PreparedStatement st) {
+
+		if(st != null) {
+			try {
+				st.close();
+			}catch(SQLException e) {
+				throw new DbException(e.getMessage());
+			}
 		}
 	}
 	
