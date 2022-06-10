@@ -13,10 +13,18 @@ import com.crudjsp.factory.ConnectionFactory;
 import com.mysql.jdbc.PreparedStatement;
 
 public class UsuarioDAO {
+	
+	private static final String LISTAR_USUARIOS = "SELECT * FROM usuario";
+	private static final String OBTER_REGISTROS = "SELECT * FROM usuario WHERE id=?";
+	private static final String EDITAR_USUARIOS = "UPDATE usuario SET nome = ?, email = ?, idade = ?, estado = ? WHERE id =?";
+	private static final String CADASTRAR_USUARIOS = "INSERT INTO usuario(nome, email, idade, estado)"
+			+ "VALUES(?, ?, ?, ?)";
+	private static final String DELETAR_USUARIOS = "DELETE FROM usuario WHERE id=?";
+	
+	
 
 	public static List<Usuario> listarUsuarios() throws Exception {
 		List<Usuario> lista = new ArrayList<Usuario>();
-		String sql = "SELECT * FROM usuario";
 
 		Connection conx = null;
 		PreparedStatement ps = null;
@@ -24,7 +32,7 @@ public class UsuarioDAO {
 
 		try {
 			conx = ConnectionFactory.criandoConexaoBanco();
-			ps = (PreparedStatement) conx.prepareStatement(sql);
+			ps = (PreparedStatement) conx.prepareStatement(LISTAR_USUARIOS);
 			rset = ps.executeQuery();
 
 			while (rset.next()) {
@@ -45,7 +53,7 @@ public class UsuarioDAO {
 			ConnectionFactory.fecharConexao(conx);
 			ConnectionFactory.fecharStatement(ps);
 			ConnectionFactory.fecherResultSet(rset);
-		} // fially
+		} // finally
 		return lista;
 
 	}
@@ -56,11 +64,10 @@ public class UsuarioDAO {
 		Connection conx = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		String sql = "SELECT * FROM usuario WHERE id=?";
 
 		try {
 			conx = ConnectionFactory.criandoConexaoBanco();
-			ps = (PreparedStatement) conx.prepareStatement(sql);
+			ps = (PreparedStatement) conx.prepareStatement(OBTER_REGISTROS);
 
 			ps.setInt(1, id);
 			rs = ps.executeQuery();
@@ -90,11 +97,10 @@ public class UsuarioDAO {
 		int status = 0;
 		Connection conx = null;
 		PreparedStatement ps = null;
-		String sql = "UPDATE usuario" + " SET nome=?," + " email=?," + " idade=?," + " estado=?" + " WHERE id=?";
 
 		try {
 			conx = ConnectionFactory.criandoConexaoBanco();
-			ps = (PreparedStatement) conx.prepareStatement(sql);
+			ps = (PreparedStatement) conx.prepareStatement(EDITAR_USUARIOS);
 
 			ps.setString(1, u.getNome());
 			ps.setString(2, u.getEmail());
@@ -120,11 +126,10 @@ public class UsuarioDAO {
 		int status = 0;
 		Connection conx = null;
 		PreparedStatement ps = null;
-		String sql = "INSERT INTO usuario" + "(nome," + " email," + " idade," + " estado)" + " VALUES(?, ?, ?, ?)";
-
+		
 		try {
 			conx = ConnectionFactory.criandoConexaoBanco();
-			ps = (PreparedStatement) conx.prepareStatement(sql);
+			ps = (PreparedStatement) conx.prepareStatement(CADASTRAR_USUARIOS);
 
 			ps.setString(1, usuario.getNome());
 			ps.setString(2, usuario.getEmail());
@@ -149,12 +154,11 @@ public class UsuarioDAO {
 		int status = 0;
 		Connection conx = null;
 		PreparedStatement ps = null;
-		String sql = "DELETE FROM usuario WHERE id=?";
 
 		try {
 
 			conx = ConnectionFactory.criandoConexaoBanco();
-			ps = (PreparedStatement) conx.prepareStatement(sql);
+			ps = (PreparedStatement) conx.prepareStatement(DELETAR_USUARIOS);
 
 			ps.setInt(1, usuario.getId());
 
